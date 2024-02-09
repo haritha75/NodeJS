@@ -1,0 +1,5 @@
+the job of middle wars is it executes the all requests which are coming or receiving the server.
+
+for example we are given request and not getting respond directly and that request will go the another middlewar and again that middlewars send request other middle and at the final it send to the server.
+like this in the request and respond we have many middlewars to perform the action like responds.
+ and also one middle transfer control to another middlewar that means it pass the http request to another one.

@@ -1,0 +1,45 @@
+synchrouns programming : it is single thread that means only one operation executed at a time.
+and is it a blocking means it will send one request to the server at a time and wait for the responds frm the server
+asynchrohous :  it is  non-blocking that means multiple requests hapeening at a time to the server.
+it increases the thoughtput because multiple operations runs at the same time .
+and also asynchrohous programming in js hapeening in single thread only.
+
+synchrouns Behaviour: In synchronous one completes work and go to the another method if one method not completes then remaining methods waiting for theat one. it will execute sequencially.so it will take time so much because we are waiting for others methods also.
+
+asynchrohous Behaviour:  it means it does not wait for the another one it will do on time. that means it does not wait for another method it will the job that's it.here all methods executes at a time so it will take less and also not waiting for other methods also.
+
+so that's why synchronous programming is not better than asynchrohous programming in terms of performance.
+
+function fun1() {
+    console.log('line 1');
+};
+function fun2() {
+    setTimeout(()=>{
+        console.log('line 2');
+
+    },1000);
+};
+function fun3() {
+    console.log('line 3');
+};
+
+fun1();
+fun2();
+fun3();
+//asynchronous means it does not wait for other methods it do work. here second method print after 1000 sec but 3rd method not wating for that one it excute  after 1000 sec then 2nd method excute.
+function fun1() {
+    console.log('line 1');
+};
+function fun2() {
+    console.log('line 2');
+};
+function fun3() {
+    console.log('line 3');
+};
+
+fun1();
+fun2();
+fun3();
+//it print sequentially.
+
+Async Programming:  simple ahndling multiple requests at a time.

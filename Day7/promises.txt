@@ -1,4 +1,4 @@
-promises are nothing commitment like for example my mother ask you donot do any work then i will give to her one promises i said "i will bring vegetables".
+promises are nothing commitment like for example my mother ask  why your not doing anything or any work then i will give to her one promises i said "i will bring vegetables".
 here   i am given one statement that statement will not yet done i just said that i will do it htat means that sentence will be future right that means  it is in pending state means i promises not yet completed it is in pending level.
 whenver completed the promises it will success that is called fullfilled state or  for some isssues i cannot do the work then it  rejected  that is called rejected level or state.
 whenver the promises success or rejected is it called settled  state because we got something whther promises success or not does not matter.

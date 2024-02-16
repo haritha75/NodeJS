@@ -2,19 +2,52 @@
 
 const mongoose = require("mongoose");
 
+// MongoDB connection URI
+const mongoURI = "mongodb://localhost:27017/mydatabase";
+
+// Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/testDatabase")
-  .then(() => console.log("Successfully connected to MongoDB"))
-  .catch((err) => console.error("Could not connect to MongoDB:", err));
+  .connect(mongoURI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+  });
 
 // Schema
 
+//DATA VALIDATION IN MONGODB USING NODE JS  CODE nothing validate the data if data is not validate then print error
+// in below we mention requred that means we have to mention that attribute if not then we have to print error
+
 const courseSchema = new mongoose.Schema({
-  name: String,
-  creator: String,
-  publishDate: { type: Date, default: DAte.now },
-  isPublished: Boolean,
-  rating: Number,
+  name: { type: String, required: true, minlength: 5, maxlength: 200 },
+  // customer data validation
+  tags: {
+    type: Array,
+    validate: {
+      //validate working like required
+      validator: function (tags) {
+        // here validtor is method it can validate the data
+        return tags.length > 1; // if setting  or given array length is 2 or more than 2 it return true.
+      },
+    },
+  },
+  category: {
+    type: String,
+    retuired: true,
+    enum: ["DSA", "WEB", "MOBILE", "DATA SCIENCE"],
+  },
+  creator: { type: String, required: true },
+  publishDate: { type: Date, default: Date.now },
+  isPublished: { type: String, required: true },
+  rating: {
+    type: Number,
+    required: function () {
+      return this.isPublished;
+      // here what happends whenever we set the publish value to true then if not mention rating  in the create course but  published true right mention in funcion we mention published so true but we are not given rating  that means their is no number type but it return true  typ must be number but their is no number so it gives error like this we can use.
+    },
+  },
 });
 // here createing schema and setting the attribute means rows name
 
@@ -25,14 +58,25 @@ const Course = mongoose.model("Course", courseSchema);
 async function createCourse() {
   const course = new Course({
     name: "javascript",
+    tags: ["mongodb", "nodejs"],
+    category: "database", // if it is not in the list it gives error
     creator: "haritha",
     isPublished: true,
     rating: 4.5,
   });
   // here create the dataset for that schema means like a setting values in table.
   //  if you want to more rows then you can execute after execute the data will be stored in table then again change value after changing we can execute again and again how many times you want that's it.
-  const res = await course.save(); // we are saving that data save method is asyn so use async
-  console.log(res);
+  try {
+    //await course.validate(); // it is a inbuilt method we can use this is also in place below one
+    const res = await course.save(); // we are saving that data save method is asyn so use async
+    console.log(res);
+  } catch (err) {
+    // error validation  means to identifing where error happening  what is that error use like this
+    for (field in err.errors) {
+      //here we have many attributes in can identify which attribute getting error and also on this attribute what is error it can specify
+      console.log(err.errors[field]);
+    }
+  }
 }
 createCourse();
 //  till now we are creating the data and post in the table now we can print the data or query from that table or document
@@ -132,5 +176,3 @@ async function deleteCourse(id) {
 }
 
 deleteCourse("passid from mangodb copy and paste here");
-
-//DATA VALIDATION IN MONGODB USING NODE JS  CODE

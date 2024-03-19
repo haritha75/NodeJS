@@ -1,0 +1,77 @@
+Files:
+
+files has few disadvantages, so relational databases came into place.
+
+disadvantages of files:
+
+slow performance if the file is large.
+difficult to acess the data and perform crud operations.
+allows duplicates.
+
+
+Relational Data base:
+--------------------
+Ex:
+
+MySQL
+SQL Server
+Oracle
+Postgress SQL
+
+Relational data base means we are establishing the relationships b/w tables.
+
+The drawback of relational data base is we can store the data in particular order. i.e. order as schema.
+
+Non-Relational Data base:
+------------------------
+
+Ex:
+
+MongoDB
+Redis
+
+In order to overcome the drawback of relational data bases non-relational data bases introduced.
+
+In MongoDB we have databases, inside the databases we have collections, inside the collections we have doucments.
+In MySQL we call record but in MongoDB we call it as collection.
+
+Example:
+-------
+
+College is a database.
+Students, teachers, admin are collections.
+
+If we are in Students collection:
+{name:"x",age:20,gender:female}; // it is called as doucment.
+
+// a collection is a group of doucments.
+
+CRUD operations:
+---------------
+
+We can perform crud operations in different ways:
+
+1) using MongoDB compass: we have to install the MongoDB compass in our system.
+    -> create the database
+    -> create the collection inside the database
+    -> if you want to add the data, click on add data and select insert doucment. Then add required data.
+    -> To edit or delete the data move cursor on the doucment you will see options, select the desired option.
+    -> To find the doucment, click on search bar just above the doucments
+       commands for finding the data:
+
+       -> {} -> returns all the doucments in the collection.
+       ->{id:5} -> returns all the matching doucments in the collection with id:5
+
+2) using terminal (shell):
+
+    -> type mongosh command in terminal.
+    -> show dbs -> returns all the databases in the MongoDB
+    -> use dbName -> to use particular database
+    -> show collections -> to view all the collections in that database.
+    -> finding data -> db.collectionName.find({});
+    -> inserting data -> db.collectionName.insertOne({name:"x",age:20}); or 
+                         db.collectionName.insertMany([{},{},{}]);
+    
+    -> updata data -> db.collectionName.updateOne({previous data},{$set:{updated data}}); or we can use update many 
+
+    -> delete data -> db.collectionName.deleteOne({id:50}); or go for deleteMany

@@ -1,102 +1,37 @@
+const debug = require("debug")("app:startup");
+
+const config = require("config");
 const joi = require("joi"); //to validate data use joi function
 const express = require("express");
 const app = express();
+const logger = require("./middleware/logger");
+const helment = require("helmet"); //protect yor app from other web vulnerabilities
+const morgan = require("morgan");
+const courses = require("./routes/courses");
+const home = require("./routes/home");
+
+app.set("view engine", "pug"); //express internally load pug module if you want return html to the client use view engine pug is aslo view engine
+
+app.set("views", "./views");
 
 app.use(express.json);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
+app.use(logger);
+app.use(helment());
+app.use("/api/courses", courses);
+app.use("/", home);
 
-const courses = [
-  { id: 1, name: "course1" },
-  { id: 2, name: "course2" },
-  { id: 3, name: "course3" },
-];
+// configuration
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-app.get("/api/courses", (req, res) => {
-  res.send(courses);
-});
+console.log("Application Name: " + config.get("name"));
+console.log("Mail Server Name: " + config.get("mail.host"));
+console.log("Mail Password Name: " + config.get("mail.password"));
 
-// app.get("/api/courses", (req, res) => {
-//   res.send([1, 2, 3]);
-// });
-
-app.post("/api/courses", (req, res) => {
-  // validation
-  const { error } = validateCourse(req.body); //result.error
-
-  if (error) {
-    res.status(404).send(error.details[0].message);
-    return;
-  }
-
-  const course = {
-    id: courses.length + 1,
-    name: req.body.name,
-  };
-  courses.push(course);
-  res.send(course);
-});
-
-app.put("/api/courses/:id", (req, res) => {
-  // look up the course
-  // if not exisitng, return 404
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
-    res.status(404).send("given id is not found");
-    return;
-  }
-
-  // validate
-  // if invalid , return 400-bad request
-
-  const { error } = validateCourse(req.body); //result.error
-
-  if (error) {
-    res.status(404).send(error.details[0].message);
-    return;
-  }
-
-  // update course
-
-  course.name = req.body.name;
-  // return the updated course
-  res.send(course);
-});
-
-app.get("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
-    res.status(404).send("given id is not found");
-    return;
-  }
-  res.send(course);
-});
-
-// app.get("/api/posts/:year/:month", (req, res) => {
-//   res.send(req.params);
-//   //res.send(req.query);
-// });
-
-function validateCourse(course) {
-  const schema = {
-    name: Joi.string().min(3).required(),
-  };
-
-  return Joi.validate(course, schema);
+if (app.get("env") === "development") {
+  app.use(morgan("tiny"));
+  debug("morgan enabled...");
 }
-
-app.delete("/api/courses/:id", (req, res) => {
-  const course = courses.find((c) => c.id === parseInt(req.params.id));
-  if (!course) {
-    res.status(404).send("given id is not found");
-    return;
-  }
-  // delete
-  const index = courses.indexOf(course);
-  courses.splice(index, 1);
-  res.send(course);
-});
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

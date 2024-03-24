@@ -6,62 +6,29 @@ mongoose
   .catch((err) => console.error("could not connect tto mongodb...", err));
 
 const courseSchema = new mongoose.Schema({
-  name: { type: String, required: true, minlength: 5, maxlength: 255 },
-  category: {
-    type: String,
-    required: true,
-    enum: ["web", "mobile", "network"],
-  },
+  name: String,
   author: String,
-  tags: {
-    type: Array,
-    // custom validator
-    isAsync: true,
-    validate: {
-      validator: function (v, callback) {
-        setTimeout(() => {
-          const result = v && v.length > 0;
-          // Inside the setTimeout function, it checks if the value (v) exists or not means null and if its length is greater than 0 (meaning it has at least one tag).
-          callback(result);
-        }, 4000);
-      },
-      message: "A Course should have at least one tag.",
-    },
-  },
+  tags: [String],
   date: { type: Date, default: Date.now },
   isPublished: Boolean,
-  price: {
-    type: Number,
-    required: function () {
-      return this.isPublished; // means price will be required
-    },
-    min: 10,
-    max: 200,
-  },
+  price: Number,
 });
 
 const Course = mongoose.model("Course", courseSchema);
 
 async function createCourse() {
   const course = new Course({
-    name: "C# Course",
-    category: "network",
-    author: "Priya",
-    tags: null,
+    name: "React Course",
+    author: "Raj",
+    tags: ["React", "frontend"],
     isPublished: true,
-    price: 59,
+    price: 599,
   });
 
-  try {
-    //await course.validate();
-    // we can do in both ways
-    const result = await course.save();
-    console.log(result);
-  } catch (err) {
-    console.log(err.message);
-  }
+  const result = await course.save();
+  console.log(result);
 }
-createCourse();
+//createCourse();
 
 async function getCourses() {
   const courses = await Course.find({ author: "Haritha" })
@@ -150,7 +117,7 @@ async function updateCourse(id) {
 
   console.log(result2);
 }
-//updateCourse("65ffa94ceab5912ae4c315fe");
+updateCourse("65ffa94ceab5912ae4c315fe");
 
 // delete document
 
@@ -159,4 +126,4 @@ async function deleteCourse(id) {
   //const course = await Course.findByIdAndRemove(id); //you can use this one also
   console.log(res);
 }
-//deleteCourse("65ffa94ceab5912ae4c315fe");
+deleteCourse("65ffa94ceab5912ae4c315fe");

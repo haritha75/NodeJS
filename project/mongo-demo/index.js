@@ -7,27 +7,38 @@ mongoose
 
 const courseSchema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 5, maxlength: 255 },
+
   category: {
     type: String,
     required: true,
     enum: ["web", "mobile", "network"],
+    lowercase: true, //it automatically converts into lowercase
+    //uppercase: true,
+    trim: true,
   },
+
   author: String,
+
   tags: {
     type: Array,
-    // custom validator
-    isAsync: true,
+    // Custom validator
     validate: {
-      validator: function (v, callback) {
-        setTimeout(() => {
-          const result = v && v.length > 0;
-          // Inside the setTimeout function, it checks if the value (v) exists or not means null and if its length is greater than 0 (meaning it has at least one tag).
-          callback(result);
-        }, 4000);
+      validator: function (v) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const isValid = Array.isArray(v) && v.length > 0;
+            // Inside the setTimeout function, it checks if the value (v) is an array with at least one element.
+            if (isValid) {
+              resolve(true); // Resolve the promise with true if validation passes
+            } else {
+              reject(new Error("A Course should have at least one tag.")); // Reject the promise with an error message if validation fails
+            }
+          }, 4000);
+        });
       },
-      message: "A Course should have at least one tag.",
     },
   },
+
   date: { type: Date, default: Date.now },
   isPublished: Boolean,
   price: {
@@ -37,6 +48,8 @@ const courseSchema = new mongoose.Schema({
     },
     min: 10,
     max: 200,
+    get: (v) => Math.round(v), //even if the database contais double or float when you read it gives round value becausr we mention round
+    set: (v) => Math.round(v),
   },
 });
 
@@ -45,11 +58,11 @@ const Course = mongoose.model("Course", courseSchema);
 async function createCourse() {
   const course = new Course({
     name: "C# Course",
-    category: "network",
-    author: "Priya",
-    tags: null,
+    category: "Network",
+    author: "Manjula",
+    tags: ["C#", "backend"],
     isPublished: true,
-    price: 59,
+    price: 59.8,
   });
 
   try {
@@ -58,52 +71,19 @@ async function createCourse() {
     const result = await course.save();
     console.log(result);
   } catch (err) {
-    console.log(err.message);
+    for (field in err.errors) console.log(err.errors[field].message);
   }
 }
 createCourse();
 
 async function getCourses() {
   const courses = await Course.find({ author: "Haritha" })
-    //.find({ price: { $gte: 10, $lte: 20 } })
-    //.find({ price: { $in: [10, 20, 30] } })
     .limit(3)
     .sort({ name: 1 })
     .select({ name: 1, tags: 1, _id: 0 }); //here we are slelecting only name and tags but id automatically displays so if you donot want to that make it 0. instead of select use count it returns number of documents.
   console.log(courses);
 }
 //getCourses();
-
-// logical query
-
-// async function getCourses() {
-//   const courses = await Course.find()
-//     .or([{ author: "Haritha" }, { isPublished: true }])
-//     .and([])
-//     .limit(3)
-//     .sort({ name: 1 })
-//     .select({ name: 1, tags: 1, _id: 0 }); //here we are slelecting only name and tags but id automatically displays so if you donot want to that make it 0.
-//   console.log(courses);
-// }
-// getCourses();
-
-// regular expression
-
-// async function getCourses() {
-//   const courses = await Course
-//     // starts with Hari
-//     .find({ author: /^Hari/ })
-//     // ends with j
-//     .find({ author: /j$/i }) //if you want case in sensitive use i
-//     // contains anywhere
-//     .find({ author: /.*Hari.*/i }) //.* means zero or one more characters
-
-//     .limit(3)
-//     .sort({ name: 1 })
-//     .select({ name: 1, tags: 1, _id: 0 }); //here we are slelecting only name and tags but id automatically displays so if you donot want to that make it 0.
-//   console.log(courses);
-// }
-// getCourses();
 
 async function updateCourse(id) {
   //  we can use only one  of this

@@ -1,0 +1,56 @@
+In MongoDB, modeling relationships between data involves understanding how to structure your documents to represent the relationships efficiently. MongoDB is a NoSQL database, which means it doesn't support joins like traditional relational databases. Instead, it encourages denormalization and embedding to improve performance.
+
+Here are some common strategies for modeling relationships in MongoDB:
+1. Embedding (denormalization)
+
+Embedding involves nesting related data within a single document. This is useful when the related data is small and doesn't change frequently.
+
+Example:
+
+{
+   "_id": ObjectId("1234567890"),
+   "title": "Book Title",
+   "author": {
+      "name": "Author Name",
+      "bio": "Author Bio"
+   }
+}
+2. Referencing (normlization)
+
+Referencing involves storing references to related documents within a field of another document. This is suitable for relationships where the related data is large or frequently updated.
+
+// Book Document
+{
+   "_id": ObjectId("1234567890"),
+   "title": "Book Title",
+   "author_id": ObjectId("9876543210") //here we are storing reference of another document
+}
+
+// Author Document
+{
+   "_id": ObjectId("9876543210"),
+   "name": "Author Name",
+   "bio": "Author Bio"
+}
+
+3. Hybrid Approach
+
+This approach combines embedding and referencing to strike a balance between performance and data consistency. You can embed some frequently accessed data and reference larger or less frequently accessed data.
+
+// Book Document with Embedded Author Info and Referenced Publisher Info
+{
+   "_id": ObjectId("1234567890"),
+   "title": "Book Title",
+   "author": {
+      "name": "Author Name",
+      "bio": "Author Bio"
+   },
+   "publisher_id": ObjectId("5432109876")
+}
+
+// Publisher Document
+{
+   "_id": ObjectId("5432109876"),
+   "name": "Publisher Name",
+   "location": "Publisher Location"
+}

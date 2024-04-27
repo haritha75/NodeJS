@@ -3,7 +3,7 @@ const winston = require("winston");
 const {
   transports: { File },
 } = winston; // Destructure transports from winston
-const { MongoDB } = require("winston-mongodb");
+// const { MongoDB } = require("winston-mongodb");
 
 module.exports = function () {
   // Initialize Winston logger
@@ -14,18 +14,21 @@ module.exports = function () {
         filename: "uncaughtException.log",
         level: "error",
       }),
-      new MongoDB({ db: "mongodb://localhost/vidly", level: "info" }),
+
+      // new MongoDB({ db: "mongodb://localhost/vidly", level: "info" }),
     ],
   });
 
   // Handle uncaught exceptions
   process.on("uncaughtException", (ex) => {
+    winston.error(ex.message, ex);
     logger.error(ex.message, ex); // Log the exception
     process.exit(1); // Optionally, exit the process
   });
 
   // Handle unhandled promise rejections
   process.on("unhandledRejection", (ex) => {
+    winston.error(ex.message, ex);
     logger.error(ex.message, ex); // Log the exception
     process.exit(1); // Optionally, exit the process
   });

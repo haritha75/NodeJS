@@ -4,6 +4,7 @@ const movies = require("../routers/movies.js");
 const rentals = require("../routers/rentals.js");
 const users = require("../routers/users");
 const auth = require("../routers/auth");
+const returns = require("../routers/returns");
 const express = require("express");
 const error = require("../middleware/error");
 
@@ -16,6 +17,7 @@ module.exports = function (app) {
   app.use("/api/rentals", rentals);
   app.use("/api/users", users);
   app.use("/api/auth", auth);
+  app.use("/api/returns", returns);
 
   // to handle the errors based on the features situaions use like this
   // here first we register this function  after all the existing middlewares function(means above all) when we call next end up here(this function)

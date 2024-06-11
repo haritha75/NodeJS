@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const validateObjectId = require("../middleware/validateObjectId");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const express = require("express");
 const router = express.Router();
 const { Genre, validateGenre } = require("../models/genres");
@@ -6,14 +9,15 @@ const { Genre, validateGenre } = require("../models/genres");
 router.get("/", async (req, res) => {
   const genres = await Genre.find().sort("name");
   res.send(genres);
+  // throw new Error("Intentional internal server error");
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   // validation
   const { error } = validateGenre(req.body); //result.error
 
   if (error) {
-    res.status(404).send(error.details[0].message);
+    res.status(400).send(error.details[0].message);
     return;
   }
 
@@ -26,7 +30,7 @@ router.put("/:id", async (req, res) => {
   const { error } = validateGenre(req.body); //result.error
 
   if (error) {
-    res.status(404).send(error.details[0].message);
+    res.status(400).send(error.details[0].message);
     return;
   }
   const genre = await Genre.findByIdAndUpdate(
@@ -45,7 +49,7 @@ router.put("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const genre = await Genre.findByIdAndDelete(req.params.id);
   if (!genre) {
     res.status(404).send("given id is not found");
@@ -55,7 +59,7 @@ router.delete("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
   const genre = await Genre.findById(req.params.id);
   if (!genre) {
     res.status(404).send("given id is not found");

@@ -1,0 +1,6 @@
+to run our test use jest -- in json file
+
+"scripts": {
+    "test": "jest"
+  },
+

@@ -1,0 +1,64 @@
+prop:  already their is a compnent send the data from outside called prop and use of this reuse
+state: create the data inside the compnent and manipulate and show and to support SPA
+
+both are data but difference is prop from outside and state inside
+
+
+component  2 types
+1 class -- create javascript classes and render components -- state inbuilt
+2. functional based -create functiona and redenr it -- no inbult stateso introduced hooks(special function  it returns two things ) using hooks we can manipute state
+
+nodejs - to run javascript without browser
+
+npx create-react-app -- to create react app it provided bioler plate code
+package.json- whatever we used in project all module all their if sometimes project deleted using pakcage.json install the modules.
+
+npm start - to start react project in local server
+
+jsx-- combination of html and js it return 
+
+es7-- for extention rfc--extension it create function based rcc-classbased 
+
+INSIDE THE REACTPROJECT APP
+
+--node_modules--it downloads whatever required for the node modules
+--.gitignore-ignore the files
+--reade.md-for github
+--public  -- index.html--favicon--manifest.json used to add  the app short cut way
+--src--index.js-- acess inthe root from index.html and redering shwoing te data -- app.js is a function or compnent and whatever data in the app.js rendering in the index.js
+
+how to create own compnent
+
+-- go to src folder
+--give name of the compnent name.js
+-- it gives automatically compnent name and returning all we need to write your own logic
+-- next we need to call the compponent in index.js like this <app/> 
+-- save and run it we can see the compnent conetent in the browser
+
+
+
+in  class based -- we can createconstrcotr and pass the prop
+in function based -- create usestate hook and send the data
+
+1)  constrctor(props) {
+super(props)
+this.state ={
+}
+}
+
+
+2)return functionname()={
+
+let {state,}=useState();
+
+render() {
+return{
+
+<div>
+<p>i am a cbc{this.props.value}</p>
+</div>
+}
+
+
+}
+}

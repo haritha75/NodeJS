@@ -1,0 +1,8 @@
+What is the main advantage of using let and const over the older var keyword in JavaScript?
+
+Correct Answer:
+They introduce block scoping, making variable accessibility more predictable within {} blocks.
+Explanation:
+
+let and const are block-scoped, meaning they're only accessible within the {} they are defined in.
+This avoids unexpected behavior caused by var, which is function-scoped and can leak outside blocks.
